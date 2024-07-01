@@ -6,24 +6,19 @@
       </div>
       <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
         <ul class="nav flex-column">
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard') ? 'active' : 'text-dark' }}" aria-current="page" href="/dashboard">
                 <i class="bi bi-house-door-fill"></i> 
                 Dashboard
             </a>
-          </li>
+          </li> --}}
           <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/workorder*') ? 'active' : 'text-dark' }}" href="/dashboard/workorder">
+            <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/forms*') ? 'active' : 'text-dark' }}" href="/dashboard/forms">
                 <i class="bi bi-layout-text-sidebar-reverse"></i> 
-                Workorders
+                Formulir Laporan
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/material*') ? 'active' : 'text-dark' }}" href="/dashboard/material">
-                <i class="bi bi-box"></i> 
-                Materials
-            </a>
-          </li>
+         
           <li class="nav-item">
             <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/user*') ? 'active' : 'text-dark' }}" href="/dashboard/user">
                 <i class="bi bi-person"></i> 

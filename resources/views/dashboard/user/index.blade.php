@@ -20,6 +20,7 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">Nama</th>
+          <th scope="col">ID Karyawan</th>
           <th scope="col">Email</th>
           <th scope="col">Role</th>
           <th scope="col">Action</th>
@@ -30,6 +31,7 @@
         <tr>
           <td>{{ $loop->iteration }}</td>
           <td>{{ $user->name }}</td>
+          <td>{{ $user->id }}</td>
           <td>{{ $user->email }}</td>
           <td>{{ $user->role }}</td>
           <td>

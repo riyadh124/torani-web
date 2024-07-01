@@ -2,7 +2,7 @@
 
 @section('container')
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Workorders</h1>
+    <h1 class="h2">Formulir Laporan</h1>
   </div>
 
   @if (session()->has('success'))
@@ -14,7 +14,7 @@
   {{-- @dd($workorders) --}}
   
   <div class="table-responsive small col-lg-12">
-    <a href="/dashboard/workorder/create" class="btn btn-primary mb-3">Create New Workorder</a>
+    {{-- <a href="/dashboard/workorder/create" class="btn btn-primary mb-3">Create New Workorder</a> --}}
     <table class="table table-striped table-sm">
       <thead>
         <tr>

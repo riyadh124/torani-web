@@ -26,7 +26,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
     
-            if ($user->role !== 'Admin') {
+            if ($user->role !== 'Supervisor') {
                 Auth::logout();
                 return back()->with('loginError','Only Admins are allowed to login!');
             }
@@ -98,7 +98,7 @@ class AuthController extends Controller
         try {
             $validateUser = Validator::make($request->all(), 
             [
-                'email' => 'required|email',
+                'id' => 'required',
                 'password' => 'required'
             ]);
 
@@ -110,14 +110,14 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            if(!Auth::attempt($request->only(['email', 'password']))){
+            if(!Auth::attempt($request->only(['id', 'password']))){
                 return response()->json([
                     'status' => false,
-                    'message' => 'Email & Password does not match with our record.',
+                    'message' => 'ID & Password does not match with our record.',
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('id', $request->id)->first();
 
             return response()->json([
                 'status' => true,

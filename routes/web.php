@@ -5,7 +5,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DashboardMaterialController;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\DashboardWorkorderController;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\WorkorderController;
+use App\Models\Form;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,11 +21,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home',[
-        "title" => "Home",
-    ]);
-});
+Route::get('/',[AuthController::class,'index'])->name('login')->middleware('guest');
 
 Route::get('/about', function () {
     return view('about',[
@@ -40,7 +38,14 @@ Route::post('/logout',[AuthController::class,'logout']);
 
 Route::get('/dashboard',[DashboardController::class,'index'])->middleware('auth');
 
-Route::resource('/dashboard/workorder',DashboardWorkorderController::class)->middleware('auth');
+Route::resource('/dashboard/forms',FormController::class)->middleware('auth');
+Route::get('/dashboard/forms/{form}/formchecks', [FormController::class, 'showFormChecks'])->name('forms.formchecks');
+
+Route::post('/forms/{form}/approve', [FormController::class, 'approve'])->name('forms.approve');
+
+// Route for rejecting the form
+Route::post('/forms/{form}/reject', [FormController::class, 'reject'])->name('forms.reject');
+
 Route::resource('/dashboard/material',DashboardMaterialController::class)->middleware('auth');
 Route::resource('/dashboard/user',DashboardUserController::class)->middleware('auth');
 
