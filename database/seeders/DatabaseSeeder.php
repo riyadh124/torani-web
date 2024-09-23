@@ -3,13 +3,14 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
-use App\Models\Form;
-use App\Models\FormCheck;
-use App\Models\Material;
-use App\Models\Workorder;
+use App\Models\InventoryItem;
 use App\Models\User;
+use App\Models\Division;
+use App\Models\StockIn;
+use App\Models\StockOut;
+
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,76 +19,110 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $divisions = [
+            ['name' => 'Kasir'],
+            ['name' => 'Dapur Umum'],
+            ['name' => 'Koki'],
+            ['name' => 'Kapten'],
+            ['name' => 'Cuci Piring'],
+            ['name' => 'Waitress'],
+            ['name' => 'Keseluruhan'],
+        ];
 
-        User::factory()->create([
-         'name' => 'Admin Account',
-         'email' => 'admin@gmail.com',
-         'role' => 'Supervisor',
+        foreach ($divisions as $division) {
+            Division::create($division);
+        }
+
+        $users = [
+            [
+                'name' => 'Admin Owner',
+                'email' => 'owner@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'Owner',
+                'division_id' => Division::where('name', 'Keseluruhan')->first()->id,
+            ],
+            [
+                'name' => 'Manager',
+                'email' => 'manager@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'Manajer',
+                'division_id' => Division::where('name', 'Keseluruhan')->first()->id,
+            ],
+            [
+                'name' => 'Chef',
+                'email' => 'chef@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'Karyawan',
+                'division_id' => Division::where('name', 'Koki')->first()->id,
+            ],
+            // Tambahkan user lainnya sesuai kebutuhan
+        ];
+
+        foreach ($users as $user) {
+            User::create($user);
+        }
+
+        InventoryItem::create([
+            'division_id' => 1, // Divisi (misalnya: dapur, kasir, dll.)
+            'name' => 'Beras',
+            'category' => 'Bahan Makanan',
+            'stock_quantity' => 20,
+            'unit' => 'kg',
+            'unit_price' => 12.50
         ]);
 
-        Form::create([
-         'user_id' => 240701001, // Replace with the actual user ID
-         'tipe_unit' => 'Excavator',
-         'model_unit' => 'ABC123',
-         'nomor_unit' => 'UNIT001',
-         'shift' => 'Pagi',
-         'jam_mulai' => '08:00:00',
-         'jam_selesai' => '16:00:00',
-         'hm_awal' => 1000,
-         'hm_akhir' => 1200,
-         'job_site' => 'Construction Site A',
-         'lokasi' => 'City X, Country Y',
-         'status' => 'Waiting',
-         'catatan' => 'Test Catatan Hehehe'
-     ]);
-
-     $checks = [
-        'Kebocoran oli gear box / oil PTO (AA)',
-        'Level oil swing & kebocoran (AA)',
-        'Level oil hydraulic & kebocoran (AA)',
-        'Kondisi underacarriage (A)',
-        'Fuel drain / Buangan air dari tanki BBC (A)',
-        'BBC minimum 25% dari Cap. Tanki (A)',
-        'Buang air dalam tanki udara (A)',
-        'Kebersihan accessories safety & Alat (A)',
-        'Kebocoran2 bila ada (oli, solar, grease ) (A)',
-        'Alarm travel (Big Digger) (A)',
-        'Lock pin Bucket (AA)',
-        'Lock pin tooth & ketajaman kuku (AA)',
-        'Kebersihan aki / battery (A)',
-        'Air conditioner (AC) (A)',
-        'Fungsi steering / kemudi (AA)',
-        'Fungsi seat belt / sabuk pengaman (AA)',
-        'Fungsi semua lampu (AA)',
-        'Fungsi Rotary lamp (AA)',
-        'Fungsi mirror / spion (A)',
-        'Fungsi wiper dan air wiper (A)',
-        'Fungsi horn / klakson (AA)',
-        'Fire Extinguiser / Fire supresion APAR (AA)',
-        'Fungsi kontrol panel (AA)',
-        'Fungsi radio komunikasi (AA)',
-        'Kebersihan ruang kabin (A)',
-        'Radiator (AA)',
-        'Engine / Oli Mesin (AA)'
-    ];
-
-    foreach ($checks as $check) {
-        FormCheck::create([
-            'form_id' =>1,
-            'item_name' => $check,
-            'status' => 'OK',
-            'documentation' => 'No issues found'
+        InventoryItem::create([
+            'division_id' => 1,
+            'name' => 'Minyak Goreng',
+            'category' => 'Bahan Makanan',
+            'stock_quantity' => 5,
+            'unit' => 'liter',
+            'unit_price' => 15.00
         ]);
-    }
+
+        InventoryItem::create([
+            'division_id' => 2,
+            'name' => 'Telur',
+            'category' => 'Bahan Makanan',
+            'stock_quantity' => 100,
+            'unit' => 'pcs',
+            'unit_price' => 0.50
+        ]);
+
+      // Membuat stok masuk
+      $stockIn = StockIn::create([
+        'notes' => 'Pengiriman awal bulan'
+    ]);
+
+    // Menambahkan barang ke dalam stok masuk
+    $stockIn->inventoryItems()->attach([
+        InventoryItem::where('name', 'Beras')->first()->id => ['quantity' => 50],
+        InventoryItem::where('name', 'Minyak Goreng')->first()->id => ['quantity' => 20],
+    ]);
+
+    // Stok masuk lainnya
+    $stockIn = StockIn::create([
+        'notes' => 'Pengiriman pertengahan bulan'
+    ]);
+
+    $stockIn->inventoryItems()->attach([
+        InventoryItem::where('name', 'Beras')->first()->id => ['quantity' => 10],
+        InventoryItem::where('name', 'Telur')->first()->id => ['quantity' => 100],
+    ]);
 
 
-        // Workorder::create([
-        //     'nomor_tiket' => 'TCKT-12345',
-        //     'tipe_segmen' => 'Seeder',
-        //     'lokasi_gangguan_masal' => 'Alamat Gangguan',
-        //     'deskripsi_gangguan' => 'Deskripsi Gangguan',
-        //     'instruksi_pekerjaan' => 'Instruksi Pekerjaan',
-        //     'status' => 'Menunggu',
-        // ]);
+    $stockOut1 = StockOut::create([
+        'notes' => 'Bahan digunakan untuk memasak menu utama'
+    ]);
+
+    // Hubungkan item ke stok keluar melalui tabel pivot, dengan kuantitas barang keluar
+    $stockOut1->inventoryItems()->attach([
+        InventoryItem::where('name', 'Beras')->first()->id => ['quantity' => 40],
+        InventoryItem::where('name', 'Minyak Goreng')->first()->id => ['quantity' => 15],
+    ]);
+
+  
+
+        
     }
 }

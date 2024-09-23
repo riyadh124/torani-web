@@ -4,7 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\InventoryItemController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\StockOutController;
 use App\Http\Controllers\WorkorderController;
 use App\Models\Material;
 
@@ -23,16 +25,11 @@ Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/forms', [FormController::class, 'store']);
-    Route::post('/photo', [FormController::class, 'uploadPhoto']);
-
-    Route::get('/forms', [FormController::class, 'getForms']);
-    Route::get('/forms/{id}', [FormController::class, 'getDetailForm']);
-
-    Route::resource('/workorder',WorkorderController::class);
-    Route::resource('/material',MaterialController::class);
-    Route::put('/workorder/{id}/update-status', [WorkorderController::class, 'updateStatus']);
-    Route::put('/workorder/{id}/input-data', [WorkorderController::class, 'inputData']);
-    Route::post('/upload-image', [WorkorderController::class, 'uploadImage']);
+    Route::get('/products', [InventoryItemController::class, 'getListProducts']);
+    Route::get('/products-stock', [InventoryItemController::class, 'getInventoryWithStock']);
+    Route::get('/products-count', [InventoryItemController::class, 'countStock']);
+    Route::get('/stocks', [InventoryItemController::class, 'getStockMovements']);
+    Route::resource('/stock-out',StockOutController::class);
+    Route::get('/total-stock', [InventoryItemController::class, 'getTotalProductStock']);
 });
 

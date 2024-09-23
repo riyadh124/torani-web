@@ -13,16 +13,33 @@
             </a>
           </li> --}}
           <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/forms*') ? 'active' : 'text-dark' }}" href="/dashboard/forms">
+            <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard') ? 'active' : 'text-dark' }}" href="/dashboard">
                 <i class="bi bi-layout-text-sidebar-reverse"></i> 
-                Formulir Laporan
+                Dashboard
             </a>
           </li>
-         
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/product*') ? 'active' : 'text-dark' }}" href="/dashboard/product">
+              <i class="bi bi-egg-fried"></i>
+              Produk
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/stockIn*') ? 'active' : 'text-dark' }}" href="/dashboard/stockIn">
+              <i class="bi bi-bag-plus"></i>
+              Stok Masuk
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/stockOut*') ? 'active' : 'text-dark' }}" href="/dashboard/stockOut">
+              <i class="bi bi-bag-dash"></i>
+              Stok Keluar
+            </a>
+          </li>
           <li class="nav-item">
             <a class="nav-link d-flex align-items-center gap-2 {{ Request::is('dashboard/user*') ? 'active' : 'text-dark' }}" href="/dashboard/user">
                 <i class="bi bi-person"></i> 
-                Users
+                Akun Pengguna
             </a>
           </li>
         </ul>

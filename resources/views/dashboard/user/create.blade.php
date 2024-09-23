@@ -1,9 +1,16 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Create New User</h1>
-</div>
+<nav aria-label="breadcrumb" class=" pt-3">
+  <ol class="breadcrumb"> 
+      <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="/dashboard/user">Akun Pengguna</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Buat Akun Baru</li>
+  </ol>
+</nav>
+
+<hr>
+
 <div class="col-lg-8">
     <form method="POST" action="/dashboard/user" class="mb-5" >
         @csrf
@@ -31,8 +38,9 @@
             <label for="role" class="form-label">Role</label>
             <select class="form-select @error('role') is-invalid @enderror" id="role" name="role" required>
                 <option value="">Pilih Role</option>
-                <option value="Operator" {{ old('role') === 'Operator' ? 'selected' : '' }}>Operator</option>
-                <option value="Supervisor" {{ old('role') === 'Supervisor' ? 'selected' : '' }}>Supervisor</option>
+                <option value="Owner" {{ old('role') === 'Owner' ? 'selected' : '' }}>Owner</option>
+                <option value="Manajer" {{ old('role') === 'Manajer' ? 'selected' : '' }}>Manajer</option>
+                <option value="Karyawan" {{ old('role') === 'Karyawan' ? 'selected' : '' }}>Karyawan</option>
             </select>
             @error('role')
             <div class="invalid-feedback">

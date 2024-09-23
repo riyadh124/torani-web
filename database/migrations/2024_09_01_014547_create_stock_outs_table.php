@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documentation_after_works', function (Blueprint $table) {
+        Schema::create('stock_outs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('workorder_id');
-            $table->string('image');
+            $table->text('notes')->nullable(); // Catatan tambahan
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('documentation_after_works');
+        Schema::dropIfExists('stock_outs');
     }
 };

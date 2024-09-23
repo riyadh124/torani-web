@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documentation_before_works', function (Blueprint $table) {
+        Schema::create('divisions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('workorder_id');
-            $table->string('image');
+            $table->string('name'); // Nama divisi, misalnya: Kasir, Dapur Umum, Koki, dll.
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('documentation_before_works');
+        Schema::dropIfExists('divisions');
     }
 };

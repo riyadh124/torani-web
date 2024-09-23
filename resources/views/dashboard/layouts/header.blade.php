@@ -1,8 +1,8 @@
 <header class="navbar sticky-top bg-primary flex-md-nowrap p-2 shadow" data-bs-theme="dark">
  
-  <a class="navbar-brand" href="/">
-    <img src="{{ asset('storage/images/logo.png') }}" style="width:10%;margin-right:20px;" alt="" srcset="">
-    Bima Nusantara Internasional
+  <a class="navbar-brand" href="/dashboard">
+    <img src="{{ asset('storage/images/torani-logo.png') }}" style="width:10%;margin-right:20px;" alt="" srcset="">
+   Torani Inventory Management
   </a>
     <ul class="navbar-nav flex-row d-md-none">
       <li class="nav-item text-nowrap">

@@ -26,7 +26,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
     
-            if ($user->role !== 'Supervisor') {
+            if ($user->role == 'Karyawan') {
                 Auth::logout();
                 return back()->with('loginError','Only Admins are allowed to login!');
             }
@@ -52,41 +52,36 @@ class AuthController extends Controller
 
     public function createUser(Request $request)
     {
-        try {
-            //Validated
-            $validateUser = Validator::make($request->all(), 
-            [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required'
-            ]);
+        // Validate incoming data
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'role' => 'required|in:Karyawan,Owner,Manajer',
+            'division_id' => 'required|exists:divisions,id',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
 
-            if($validateUser->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $validateUser->errors()
-                ], 401);
-            }
-
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password)
-            ]);
-
+        if ($validator->fails()) {
             return response()->json([
-                'status' => true,
-                'message' => 'User Created Successfully',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
-            ], 200);
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 400);
         }
+
+        // Create a new user
+        $user = User::create([
+            'name' => $request->name,
+            'role' => $request->role,
+            'division_id' => $request->division_id,
+            'email' => $request->email,
+            'password' => Hash::make($request->password), // Hash the password
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User registered successfully',
+            'user' => $user
+        ], 201);
     }
 /**
      * Login The User
@@ -96,35 +91,33 @@ class AuthController extends Controller
     public function loginUser(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(), 
-            [
-                'id' => 'required',
-                'password' => 'required'
+            $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string|min:8',
             ]);
+    
+            // Check user credentials
+            $credentials = $request->only('email', 'password');
 
-            if($validateUser->fails()){
+            if (Auth::attempt($credentials)) {
+                // Authentication passed
+                $user = User::where('email', $request->email)->first();
+
+                $token = $user->createToken('authToken')->plainTextToken;
+    
                 return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $validateUser->errors()
+                    'success' => true,
+                    'message' => 'Login successful',
+                    'user' => $user,
+                    'token' => $token,
+                ], 200);
+            } else {
+                // Invalid credentials
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid credentials',
                 ], 401);
             }
-
-            if(!Auth::attempt($request->only(['id', 'password']))){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'ID & Password does not match with our record.',
-                ], 401);
-            }
-
-            $user = User::where('id', $request->id)->first();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'User Logged In Successfully',
-                'data' => $user,
-                'token' => $user->createToken("API TOKEN")->plainTextToken
-            ], 200);
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -133,5 +126,6 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
 
 }
